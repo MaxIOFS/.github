@@ -1,8 +1,8 @@
 <h1 align="center">Welcome to <span><img src="https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/web/frontend/public/assets/img/icon.png" width="20" /></span> MaxIOFS</h1>
 
 <p align="center">
-  <strong>Distributed High-Performance Object Storage</strong><br/>
-  Scalable • Secure • S3-Compatible • Cloud-Ready
+  <strong>S3-Compatible Object Storage System</strong><br/>
+  Single Binary • Modern Web UI • AWS CLI Compatible
 </p>
 
 <p align="center">
@@ -15,58 +15,74 @@
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
+  <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
+    <img src="https://img.shields.io/badge/version-0.3.1--beta-blue?style=for-the-badge" />
+  </a>
 </p>
 
 ---
 
 ## 🚀 About MaxIOFS
 
-MaxIOFS is an **enterprise-grade distributed object storage platform** designed to deliver:
+MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded Next.js web interface, designed as a single deployable binary.
 
-- ✅ **S3 API compatibility**
-- ✅ **Massive scalability**
-- ✅ **High availability & redundancy**
-- ✅ **Microservices & container-ready deployment**
-- ✅ **Optimized for hybrid and private cloud environments**
+**Current Status:** Beta - suitable for development, testing, and staging environments.
 
-Ideal for backup workloads, media storage, AI datasets, or massive file distribution.
+### Key Features
 
----
-
-## 🧩 Core Components
-
-| Component | Description |
-|--------|-------------|
-| 🗄 **MaxIOFS Core** | Distributed storage engine |
-| ⚙️ **MaxIOFS Agent** | Cluster monitoring & orchestration |
-| 🌐 **S3 Gateway** | Native S3 API compatibility layer |
-| 📊 **Dashboard UI** | Real-time metrics & cluster management |
-| 🔐 **IAM & Auth** | Access control and security policies |
+- ✅ **Full S3 API compatibility** (bucket operations, multipart uploads, presigned URLs)
+- ✅ **Embedded web console** with modern responsive UI and dark mode
+- ✅ **Single binary deployment** - no external dependencies
+- ✅ **Dual authentication** (JWT for console, S3 Signature v2/v4 for API)
+- ✅ **Multi-tenancy** with resource isolation and quotas
+- ✅ **AWS CLI compatible** - tested with MinIO Warp stress testing
 
 ---
 
-## 💻 Supported Ecosystem
+## 🛠 Technology Stack
 
 <p>
-  <img src="https://skillicons.dev/icons?i=docker,kubernetes,linux,prometheus,grafana,python,go,nginx" />
+  <img src="https://skillicons.dev/icons?i=go,nodejs,react,sqlite,docker,linux" />
 </p>
 
-- Kubernetes Ready
-- Docker Native
-- Prometheus + Grafana Metrics
-- API-driven Automation
-- Multi-node replication
+| Technology | Purpose |
+|-----------|---------|
+| **Go 1.21+** | Core storage engine |
+| **Next.js** | Embedded web console |
+| **BadgerDB** | Metadata storage |
+| **SQLite** | Authentication database |
+| **Filesystem** | Object storage backend |
 
 ---
 
-## 📌 Roadmap Highlights
+## 🏗 Current Architecture
 
-- [x] Distributed block storage engine
-- [x] Cluster agent communication
+**Single Binary Design:**
+- All-in-one executable with embedded web UI
+- BadgerDB for metadata management
+- SQLite for user authentication
+- Filesystem-based object storage
+- Atomic write operations with rollback capability
+
+**Performance (Local Benchmarks):**
+- Write: ~374 MB/s
+- Read: ~1703 MB/s
+- Stress tested: 7000+ objects with MinIO Warp
+
+---
+
+## 📌 Development Roadmap
+
+- [x] S3 API compatibility layer
+- [x] Web management console
+- [x] Multi-tenancy support
+- [x] Access key management
+- [x] Bucket policies and CORS
+- [ ] Multi-node distributed architecture
+- [ ] Object replication
 - [ ] Multi-region federation
-- [ ] Web management console
 - [ ] S3 event triggers
-- [ ] Zero-trust IAM policies
+- [ ] Enhanced IAM policies
 
 ---
 
@@ -90,9 +106,48 @@ We welcome contributions from the community ❤️
 
 ---
 
+## 🚀 Quick Start
+
+**Build Requirements:**
+- Go 1.21+
+- Node.js 18+
+
+**Build & Run:**
+```bash
+make build
+./build/maxiofs --data-dir ./data
+```
+
+**Access:**
+- Web Console: http://localhost:8081 (default credentials: admin/admin)
+- S3 API Endpoint: http://localhost:8080
+
+**⚠️ Important:** Change default credentials before production use!
+
+---
+
+## ⚠️ Known Limitations (Beta)
+
+**Architecture:**
+- Currently single-node only (distributed mode in development)
+- Filesystem backend only
+- No multi-node replication yet
+
+**Security:**
+- No security audit performed
+- HTTPS recommended for production
+- Audit logging incomplete
+
+**Production Readiness:**
+- Suitable for development, testing, and staging
+- Multi-tenancy needs production validation
+- Object Lock not validated with third-party tools
+
+---
+
 ## 📜 License
 
-MaxIOFS is released under the **Apache 2.0 License** – use, modify and scale freely.
+MaxIOFS is released under the **MIT License** – use, modify and distribute freely.
 
 ---
 
