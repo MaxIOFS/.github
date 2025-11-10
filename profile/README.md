@@ -74,7 +74,6 @@ Ideal for backup workloads, media storage, AI datasets, or massive file distribu
 
 We welcome contributions from the community ❤️
 
-📘 **Documentation:** https://github.com/MaxIOFS/MaxIOFS/docs  
 🐞 **Report Issues:** https://github.com/MaxIOFS/MaxIOFS/issues  
 🧩 **Feature Requests:** https://github.com/MaxIOFS/MaxIOFS/discussions  
 📩 **Contact:** aluisco2005@gmail.com *(optional)*
@@ -86,7 +85,6 @@ We welcome contributions from the community ❤️
 | Resource | Link |
 |--------|------|
 | Official Website | https://maxiofs.io *(optional)* |
-| Docs Repository | https://github.com/MaxIOFS/MaxIOFS/docs |
 | Discussion Board | https://github.com/MaxIOFS/MaxIOFS/discussions |
 | Releases | https://github.com/MaxIOFS/MaxIOFS/releases |
 
