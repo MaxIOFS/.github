@@ -84,7 +84,7 @@ We welcome contributions from the community ❤️
 
 | Resource | Link |
 |--------|------|
-| Official Website | https://maxiofs.io *(optional)* |
+| Official Website | https://maxiofs.com *(optional)* |
 | Discussion Board | https://github.com/MaxIOFS/MaxIOFS/discussions |
 | Releases | https://github.com/MaxIOFS/MaxIOFS/releases |
 
