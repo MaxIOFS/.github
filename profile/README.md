@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
-    <img src="https://img.shields.io/badge/version-0.3.1--beta-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-0.3.2--beta-blue?style=for-the-badge" />
   </a>
 </p>
 
