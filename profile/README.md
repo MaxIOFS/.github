@@ -92,7 +92,7 @@ We welcome contributions from the community ❤️
 
 🐞 **Report Issues:** https://github.com/MaxIOFS/MaxIOFS/issues  
 🧩 **Feature Requests:** https://github.com/MaxIOFS/MaxIOFS/discussions  
-📩 **Contact:** aluisco2005@gmail.com *(optional)*
+📩 **Contact:** contact@maxiofs.com *(optional)*
 
 ---
 
