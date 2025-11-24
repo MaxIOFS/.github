@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
-    <img src="https://img.shields.io/badge/version-0.3.2--beta-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-0.4.2--beta-blue?style=for-the-badge" />
   </a>
 </p>
 
@@ -34,7 +34,14 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 - ✅ **Embedded web console** with modern responsive UI and dark mode
 - ✅ **Single binary deployment** - no external dependencies
 - ✅ **Dual authentication** (JWT for console, S3 Signature v2/v4 for API)
+- ✅ **Two-factor authentication (2FA)** for enhanced security
 - ✅ **Multi-tenancy** with resource isolation and quotas
+- ✅ **Server-side encryption (SSE)** with persistent key management
+- ✅ **Complete audit logging** for compliance tracking
+- ✅ **Real-time notifications** via Server-Sent Events (SSE)
+- ✅ **Prometheus monitoring** integration
+- ✅ **Docker support** for containerized deployments
+- ✅ **Bucket notification webhooks** with event filtering
 - ✅ **AWS CLI compatible** - tested with MinIO Warp stress testing
 
 ---
@@ -73,16 +80,26 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 ## 📌 Development Roadmap
 
+**Completed:**
 - [x] S3 API compatibility layer
 - [x] Web management console
 - [x] Multi-tenancy support
 - [x] Access key management
 - [x] Bucket policies and CORS
+- [x] Two-factor authentication (2FA)
+- [x] Server-side encryption (SSE)
+- [x] Audit logging system
+- [x] Prometheus monitoring
+- [x] Real-time notifications (SSE)
+- [x] Bucket notification webhooks
+
+**In Progress / Planned:**
 - [ ] Multi-node distributed architecture
 - [ ] Object replication
 - [ ] Multi-region federation
-- [ ] S3 event triggers
 - [ ] Enhanced IAM policies
+- [ ] Object lifecycle management
+- [ ] Advanced compliance features
 
 ---
 
@@ -134,9 +151,9 @@ make build
 - No multi-node replication yet
 
 **Security:**
-- No security audit performed
+- No third-party security audit performed
 - HTTPS recommended for production
-- Audit logging incomplete
+- TLS/SSL configuration required for production deployments
 
 **Production Readiness:**
 - Suitable for development, testing, and staging
