@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
-    <img src="https://img.shields.io/badge/version-0.6.0--beta-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-0.6.2--beta-blue?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/badge/test_coverage-backend_53%25_|_frontend_100%25-green?style=for-the-badge" />
@@ -25,34 +25,34 @@
 
 ---
 
-## 🎯 What's New in v0.6.0-beta
+## 🎯 What's New in v0.6.2-beta
 
 <table>
 <tr>
 <td width="50%">
 
-### 🌐 Multi-Node Clustering
-Complete cluster infrastructure with HMAC authentication for secure node-to-node communication
+### 🔒 Critical S3 Auth Fixes
+Fixed 4 critical S3 authentication bugs (SigV4 parsing, timestamp validation, ARN generation) with test coverage improved from 30.2% to 47.1%
 
 </td>
 <td width="50%">
 
-### 🔄 Bucket Replication
-Automated bucket replication across cluster nodes with S3 protocol support
+### 📊 Redesigned Metrics Dashboard
+Enhanced metrics dashboard with 5 specialized tabs and standardized MetricCard components
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 📊 Cluster Dashboard
-Comprehensive UI for managing multi-node clusters with real-time monitoring
+### 🛡️ Data Loss Prevention
+Debian package configuration preservation to prevent critical data loss during updates
 
 </td>
 <td width="50%">
 
-### 🎨 Enhanced UI
-Theme system with dark/light mode and improved user experience
+### 🎨 Enhanced UI Components
+Replaced SweetAlert2 with custom modal components and improved frontend architecture
 
 </td>
 </tr>
@@ -64,7 +64,7 @@ Theme system with dark/light mode and improved user experience
 
 MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded Next.js web interface, designed as a single deployable binary.
 
-**Current Status:** 🟢 Beta (v0.6.0) - suitable for development, testing, staging, and small production workloads.
+**Current Status:** 🟢 Beta (v0.6.2) - suitable for development, testing, staging, and small production workloads.
 
 ### 💡 Why MaxIOFS?
 
@@ -339,7 +339,35 @@ make build
 ## 📦 Latest Releases
 
 <details>
-<summary><b>Version 0.6.0-beta</b> (2025-12-09) - Latest Release 🎉</summary>
+<summary><b>Version 0.6.2-beta</b> (2026-01-01) - Latest Release 🎉</summary>
+
+### Highlights
+- 🔒 **Critical S3 Auth Fixes**: Fixed 4 critical authentication bugs (SigV4 parsing, timestamp validation, ARN generation)
+- 📊 **Redesigned Metrics Dashboard**: 5 specialized tabs with standardized MetricCard components
+- 🛡️ **Data Loss Prevention**: Debian package configuration preservation during updates
+- 🎨 **UI Improvements**: Replaced SweetAlert2 with custom modal components
+- 📚 **API Documentation**: Corrected to include "/v1/" prefix in all endpoint routes
+- ✅ **Test Coverage**: Auth module improved from 30.2% to 47.1% (+56% relative gain)
+- 📝 **MIT License**: Added to repository root
+
+[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#062-beta---2026-01-01)
+</details>
+
+<details>
+<summary><b>Version 0.6.1-beta</b> (2025-12-24)</summary>
+
+### Highlights
+- 🧪 **S3 API Test Suite**: Expanded with enhanced compatibility testing
+- 🔗 **Server Integration Tests**: Added comprehensive test suite (Sprint 4)
+- 🐳 **Docker Infrastructure**: Reorganized with improved Prometheus/Grafana configurations
+- 📦 **Frontend Dependencies**: Significant upgrades to latest versions
+- 📊 **Cluster Management**: Enhanced testing and documentation
+
+[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#061-beta---2025-12-24)
+</details>
+
+<details>
+<summary><b>Version 0.6.0-beta</b> (2025-12-09)</summary>
 
 ### Highlights
 - 🌐 **Cluster Bucket Replication System** (Phase 3.3) with HMAC authentication
@@ -361,17 +389,6 @@ make build
 - ✅ Extensive test suite expansion (Backend: 53% | Frontend: 100%)
 
 [View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#050-beta---2025-12-04)
-</details>
-
-<details>
-<summary><b>Version 0.4.2-beta</b> (2025-11-24)</summary>
-
-### Highlights
-- 📬 Real-time push notifications via SSE
-- 🌍 Global bucket uniqueness enforcement
-- 🪝 Bucket webhooks for event notifications
-
-[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#042-beta---2025-11-24)
 </details>
 
 ---
@@ -399,7 +416,7 @@ make build
 
 <div align="center">
 
-### 🎉 From v0.1.0 to v0.6.0-beta
+### 🎉 From v0.1.0 to v0.6.2-beta
 
 ```mermaid
 graph LR
@@ -408,8 +425,10 @@ graph LR
     C --> D[v0.4.0<br/>Encryption & Audit]
     D --> E[v0.5.0<br/>Replication & CI/CD]
     E --> F[v0.6.0<br/>Multi-Node Cluster]
+    F --> G[v0.6.1<br/>Testing & Docker]
+    G --> H[v0.6.2<br/>S3 Auth Fixes]
 
-    style F fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style H fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
 ```
 
 ### 📈 Development Timeline
@@ -417,8 +436,9 @@ graph LR
 | Period | Releases | Major Milestones |
 |--------|----------|-----------------|
 | **Nov 2025** | v0.4.0 - v0.4.2 | Encryption, Audit Logging, Webhooks |
-| **Dec 2025** | v0.5.0 - v0.6.0 | Replication, Clustering, Dashboard |
-| **Total** | **15+ versions** | **50+ features implemented** |
+| **Dec 2025** | v0.5.0 - v0.6.1 | Replication, Clustering, Dashboard, Testing |
+| **Jan 2026** | v0.6.2 | Critical S3 Auth Fixes, Metrics Redesign |
+| **Total** | **17+ versions** | **55+ features implemented** |
 
 </div>
 
