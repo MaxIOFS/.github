@@ -16,7 +16,7 @@
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
-    <img src="https://img.shields.io/badge/version-0.6.2--beta-blue?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/version-0.7.0--beta-blue?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/badge/test_coverage-backend_53%25_|_frontend_100%25-green?style=for-the-badge" />
@@ -25,34 +25,48 @@
 
 ---
 
-## 🎯 What's New in v0.6.2-beta
+## 🎯 What's New in v0.7.0-beta
 
 <table>
 <tr>
 <td width="50%">
 
-### 🔒 Critical S3 Auth Fixes
-Fixed 4 critical S3 authentication bugs (SigV4 parsing, timestamp validation, ARN generation) with test coverage improved from 30.2% to 47.1%
+### 📦 Bucket Inventory System
+Automated periodic reports in CSV/JSON formats with 12 configurable fields, scheduled generation (daily/weekly), and destination bucket configuration
 
 </td>
 <td width="50%">
 
-### 📊 Redesigned Metrics Dashboard
-Enhanced metrics dashboard with 5 specialized tabs and standardized MetricCard components
+### 🚀 Benchmarking Suite
+Comprehensive Go benchmarks covering storage operations (10KB-10MB) and encryption tasks with `make bench` and CPU profiling support
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🛡️ Data Loss Prevention
-Debian package configuration preservation to prevent critical data loss during updates
+### 🔄 Complete Migration Implementation
+Full bucket transfers with actual object data, permissions, ACLs, versioning, lifecycle rules, and CORS policies across cluster nodes
 
 </td>
 <td width="50%">
 
-### 🎨 Enhanced UI Components
-Replaced SweetAlert2 with custom modal components and improved frontend architecture
+### 🔑 AWS-Compatible Access Keys
+New keys use AWS format (AKIA prefix + 16 alphanumeric IDs, 40-char base64 secrets). Existing keys remain functional
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 📦 RPM Package Support
+Automated RPM generation in nightly builds alongside Debian packages, supporting AMD64 and ARM64 via Rocky Linux 9
+
+</td>
+<td width="50%">
+
+### 🔁 Cluster Synchronization
+New background managers for access key syncing (SHA-256 checksums) and bucket permissions across nodes with HMAC auth
 
 </td>
 </tr>
@@ -62,9 +76,9 @@ Replaced SweetAlert2 with custom modal components and improved frontend architec
 
 ## 🚀 About MaxIOFS
 
-MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded Next.js web interface, designed as a single deployable binary.
+MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded React + Vite web interface, designed as a single deployable binary.
 
-**Current Status:** 🟢 Beta (v0.6.2) - suitable for development, testing, staging, and small production workloads.
+**Current Status:** 🟢 Beta (v0.7.0) - suitable for development, testing, staging, and small production workloads.
 
 ### 💡 Why MaxIOFS?
 
@@ -138,7 +152,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 | Technology | Purpose |
 |-----------|---------|
 | **Go 1.21+** | Core storage engine |
-| **Next.js** | Embedded web console |
+| **React + Vite** | Embedded web console |
 | **BadgerDB** | Metadata storage |
 | **SQLite** | Authentication database |
 | **Filesystem** | Object storage backend |
@@ -338,17 +352,31 @@ make build
 
 ## 📦 Latest Releases
 
+<details open>
+<summary><b>Version 0.7.0-beta</b> (2026-01-16) - Latest Release 🎉</summary>
+
+### Highlights
+- 📦 **Bucket Inventory System**: Automated periodic reports in CSV/JSON formats with 12 configurable fields and scheduled generation
+- 🚀 **Benchmarking Suite**: Comprehensive Go benchmarks for storage (10KB-10MB) and encryption with CPU profiling
+- 🔄 **Complete Migration**: Full bucket transfers with actual object data, permissions, ACLs, and configurations
+- 🔑 **AWS-Compatible Access Keys**: New format with AKIA prefix (existing keys remain functional)
+- 📦 **RPM Package Support**: Automated RPM generation in nightly builds (AMD64/ARM64)
+- 🔁 **Cluster Sync Managers**: Background syncing for access keys and bucket permissions across nodes
+- 📊 **Metrics Coverage**: Test coverage expanded from 25.8% to 36.2%
+- 🗄️ **Database Migrations**: Framework tracking schema evolution through 8 historical migrations
+
+[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#070-beta---2026-01-16)
+</details>
+
 <details>
-<summary><b>Version 0.6.2-beta</b> (2026-01-01) - Latest Release 🎉</summary>
+<summary><b>Version 0.6.2-beta</b> (2026-01-01)</summary>
 
 ### Highlights
 - 🔒 **Critical S3 Auth Fixes**: Fixed 4 critical authentication bugs (SigV4 parsing, timestamp validation, ARN generation)
 - 📊 **Redesigned Metrics Dashboard**: 5 specialized tabs with standardized MetricCard components
 - 🛡️ **Data Loss Prevention**: Debian package configuration preservation during updates
 - 🎨 **UI Improvements**: Replaced SweetAlert2 with custom modal components
-- 📚 **API Documentation**: Corrected to include "/v1/" prefix in all endpoint routes
-- ✅ **Test Coverage**: Auth module improved from 30.2% to 47.1% (+56% relative gain)
-- 📝 **MIT License**: Added to repository root
+- ✅ **Test Coverage**: Auth module improved from 30.2% to 47.1%
 
 [View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#062-beta---2026-01-01)
 </details>
@@ -361,7 +389,6 @@ make build
 - 🔗 **Server Integration Tests**: Added comprehensive test suite (Sprint 4)
 - 🐳 **Docker Infrastructure**: Reorganized with improved Prometheus/Grafana configurations
 - 📦 **Frontend Dependencies**: Significant upgrades to latest versions
-- 📊 **Cluster Management**: Enhanced testing and documentation
 
 [View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#061-beta---2025-12-24)
 </details>
@@ -373,22 +400,8 @@ make build
 - 🌐 **Cluster Bucket Replication System** (Phase 3.3) with HMAC authentication
 - 📊 **Cluster Dashboard UI** (Phase 3) for multi-node management
 - 🔧 Multi-node cluster infrastructure improvements
-- 🛡️ Enhanced security with HMAC-based cluster authentication
 
 [View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#060-beta---2025-12-09)
-</details>
-
-<details>
-<summary><b>Version 0.5.0-beta</b> (2025-12-04)</summary>
-
-### Highlights
-- 🔄 **Bucket Replication** with S3 protocol support
-- 📝 Production logging infrastructure with structured logs
-- 🎨 **Theme System** with dark/light mode switching
-- 🚀 **CI/CD Pipeline** with nightly builds
-- ✅ Extensive test suite expansion (Backend: 53% | Frontend: 100%)
-
-[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#050-beta---2025-12-04)
 </details>
 
 ---
@@ -416,7 +429,7 @@ make build
 
 <div align="center">
 
-### 🎉 From v0.1.0 to v0.6.2-beta
+### 🎉 From v0.1.0 to v0.7.0-beta
 
 ```mermaid
 graph LR
@@ -425,8 +438,8 @@ graph LR
     C --> D[v0.4.0<br/>Encryption & Audit]
     D --> E[v0.5.0<br/>Replication & CI/CD]
     E --> F[v0.6.0<br/>Multi-Node Cluster]
-    F --> G[v0.6.1<br/>Testing & Docker]
-    G --> H[v0.6.2<br/>S3 Auth Fixes]
+    F --> G[v0.6.2<br/>S3 Auth Fixes]
+    G --> H[v0.7.0<br/>Inventory & Benchmarks]
 
     style H fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
 ```
@@ -437,8 +450,8 @@ graph LR
 |--------|----------|-----------------|
 | **Nov 2025** | v0.4.0 - v0.4.2 | Encryption, Audit Logging, Webhooks |
 | **Dec 2025** | v0.5.0 - v0.6.1 | Replication, Clustering, Dashboard, Testing |
-| **Jan 2026** | v0.6.2 | Critical S3 Auth Fixes, Metrics Redesign |
-| **Total** | **17+ versions** | **55+ features implemented** |
+| **Jan 2026** | v0.6.2 - v0.7.0 | S3 Auth Fixes, Inventory System, Benchmarking, RPM Packages |
+| **Total** | **18+ versions** | **60+ features implemented** |
 
 </div>
 
