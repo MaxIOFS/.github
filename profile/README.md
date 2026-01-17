@@ -151,7 +151,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 | Technology | Purpose |
 |-----------|---------|
-| **Go 1.21+** | Core storage engine |
+| **Go 1.25+** | Core storage engine |
 | **React + Vite** | Embedded web console |
 | **BadgerDB** | Metadata storage |
 | **SQLite** | Authentication database |
@@ -202,7 +202,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 ## 📌 Development Roadmap
 
-### ✅ Completed (v0.1.0 - v0.6.0-beta)
+### ✅ Completed (v0.1.0 - v0.7.0-beta)
 
 #### Phase 1: Core Foundation
 - [x] S3 API compatibility layer
@@ -227,19 +227,36 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 - [x] Theme system (dark/light mode)
 - [x] CI/CD nightly build pipeline
 
-### 🚧 In Progress
+#### Phase 4: Advanced Clustering & Testing (v0.6.x)
+- [x] Cross-cluster bucket replication with HMAC auth
+- [x] Automatic tenant synchronization (30s intervals)
+- [x] Bucket location cache (5-min TTL, 5ms latency)
+- [x] S3 API comprehensive test suite (80+ test cases)
+- [x] Server integration tests
+- [x] Critical S3 authentication fixes (SigV4/V2)
+- [x] Docker infrastructure improvements
+- [x] Frontend dependencies optimization (SweetAlert2 removal)
+- [x] Debian package config preservation
 
-#### Phase 4: Advanced Enterprise Features
+#### Phase 5: Inventory, Benchmarks & Migrations (v0.7.0)
+- [x] Bucket Inventory System (CSV/JSON, daily/weekly schedules)
+- [x] Go benchmarking suite (12 storage + 13 encryption benchmarks)
+- [x] Complete bucket migration with actual object data
+- [x] AWS-compatible access key format (AKIA prefix)
+- [x] RPM package support (AMD64/ARM64)
+- [x] Access key cluster synchronization (SHA-256 checksums)
+- [x] Bucket permissions cluster synchronization
+- [x] Database migration framework (8 migrations tracked)
+
+### 🚧 Planned
+
+#### Phase 6: Advanced Enterprise Features
 - [ ] Multi-region federation
 - [ ] Enhanced IAM policies with RBAC
-- [ ] Object lifecycle management
 - [ ] Advanced compliance features
-- [ ] Cross-cluster bucket replication
 - [ ] Geo-replication support
 
-#### Phase 5: Performance & Scalability
-- [ ] Object versioning improvements
-- [ ] Advanced caching layer
+#### Phase 7: Performance & Scalability
 - [ ] Multi-backend support (S3, GCS, Azure)
 - [ ] Erasure coding for data durability
 
@@ -333,8 +350,8 @@ duplicity /important s3://localhost:8080/backups
 ## 🚀 Quick Start
 
 **Build Requirements:**
-- Go 1.21+
-- Node.js 18+
+- Go 1.25+
+- Node.js 24.10+
 
 **Build & Run:**
 ```bash
