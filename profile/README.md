@@ -15,58 +15,58 @@
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
-  <a href="https://github.com/MaxIOFS/MaxIOFS/releases">
-    <img src="https://img.shields.io/badge/version-1.0.0--beta-blue?style=for-the-badge" />
+  <a href="https://github.com/MaxIOFS/MaxIOFS/releases/tag/v1.2.0">
+    <img src="https://img.shields.io/badge/version-1.2.0--stable-blue?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS">
-    <img src="https://img.shields.io/badge/test_coverage-backend_53%25_|_frontend_100%25-green?style=for-the-badge" />
+    <img src="https://img.shields.io/badge/tests-3800%2B_backend_|_95%2B_frontend-green?style=for-the-badge" />
   </a>
 </p>
 
 ---
 
-## 🎯 What's New in v1.0.0-beta
+## 🎯 What's New in v1.2.0 (stable)
 
 <table>
 <tr>
 <td width="50%">
 
-### 🗄️ Pebble Storage Engine
-Replaced BadgerDB with CockroachDB's Pebble (LSM-tree, crash-safe WAL). Fixes recurring metadata corruption on power loss or process kill. Transparent auto-migration on first startup — no action needed.
+### 🗄️ Pebble v2 + tunable cache
+Metadata engine upgraded to Pebble v2 with automatic v1→v2 migration on first start. New `storage.metadata_cache_size_mb` for block-cache sizing (important for large buckets / Veeam B&R). Engine pre-tuned for write-heavy backup workloads.
 
 </td>
 <td width="50%">
 
-### 🔑 Identity Provider System
-Full LDAP/AD and OAuth2/OIDC (Google, Microsoft) SSO with auto-provisioning, group-to-role mappings, per-tenant isolation, and a built-in LDAP directory browser for bulk user import.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🛡️ Object Integrity Verification
-Background scrubber re-reads every object every 24 hours and compares the computed MD5 against the stored ETag. Corruption triggers an SSE notification, email alert, and audit log entry automatically.
-
-</td>
-<td width="50%">
-
-### 🔐 Inter-node TLS Encryption
-All cluster communication is now automatically encrypted using auto-generated internal certificates (ECDSA P-256 CA, 1-year node certs). Background renewal with hot-swap — no restart or configuration required.
+### 📊 S3 Select & inventory API
+`SelectObjectContent` runs SQL (SELECT, WHERE, GROUP BY, aggregates) on CSV and JSON Lines via streaming Event Stream protocol. Full `BucketInventory` configuration API; scheduled reports already executed by the inventory engine.
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 📧 SMTP Email Alert System
-Complete email infrastructure with configurable TLS modes (none / STARTTLS / SSL). Disk space, tenant quota, and data corruption alerts auto-resolve in the admin UI when conditions clear — no manual dismissal.
+### 🔧 RestoreObject & OwnershipControls
+`POST ?restore` for Glacier-style workflows (Veeam, NetBackup, AWS CLI). `OwnershipControls` so AWS SDK v2 clients stop throwing `OwnershipControlsNotFoundError`. `GetObjectTorrent` returns clean `501`.
 
 </td>
 <td width="50%">
 
-### 🌐 S3 Virtual-Hosted Style + Veeam
-Virtual-hosted-style addressing (`bucket.s3.example.com`) now works alongside path-style. Fully tested and compatible with Veeam Backup & Replication, WinSCP, CyberDuck, and CloudBerry.
+### 📣 Notifications, logging & Docker
+Bucket notification configs now dispatch real webhooks after mutating operations (with SSRF protection). Server access logging wired end-to-end (`?logging`). Multi-arch images on Docker Hub; Compose defaults to a host bind mount for easy `config.yaml` edits.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🖥️ Version browser UI
+**Show Versions** toggle in the bucket browser: flat view of every version and delete marker, one-click restore, delete-marker removal, and permanent version delete — backed by new console API endpoints.
+
+</td>
+<td width="50%">
+
+### 🛡️ Reliability & security fixes
+**Critical:** `metadataStore.Close()` added to shutdown — without it, Pebble `NoSync` writes since last compaction could be lost on exit. Plus COMPLIANCE bucket delete protection, Object Lock UI enforcement, sliding session refresh, and 30+ additional fixes (see [changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#120---2026-04-02)).
 
 </td>
 </tr>
@@ -78,7 +78,7 @@ Virtual-hosted-style addressing (`bucket.s3.example.com`) now works alongside pa
 
 MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded React + Vite web interface, designed as a single deployable binary.
 
-**Current Status:** 🟢 Beta (v1.0.0) - suitable for development, testing, staging, and small production workloads.
+**Current Status:** 🟢 **Stable (v1.2.0)** — suitable for production up to mid-range scale (single node to 5-node cluster); see [known limitations](https://github.com/MaxIOFS/MaxIOFS#known-limitations) in the main repository.
 
 ### 💡 Why MaxIOFS?
 
@@ -119,9 +119,10 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 - ✅ **Docker support** for containerized deployments
 
 #### 🎨 User Interface
-- ✅ **Embedded web console** with modern responsive UI
+- ✅ **Embedded web console** with modern responsive UI (S3-style bucket browser, object detail view, Actions toolbar)
 - ✅ **Theme system** with dark/light mode support
 - ✅ **Cluster Dashboard UI** for multi-node management
+- ✅ **Version browser** — Show Versions toggle with restore and delete-marker flows when versioning is on
 - ✅ **Maintenance mode banner** — visible across all pages when active
 - ✅ **Background task progress bar** for long-running operations (bulk delete, scrub)
 - ✅ **Internationalization (i18n)** — en, es, pt, de, fr with per-page translation files
@@ -129,7 +130,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 #### 🔐 Security & Authentication
 - ✅ **Dual authentication** (JWT for console, S3 Signature v2/v4 for API)
 - ✅ **Two-factor authentication (2FA)** with TOTP support
-- ✅ **Server-side encryption (SSE)** with AES-256-CTR
+- ✅ **Server-side encryption (SSE-S3)** — AES-256-GCM at rest (64 KB chunks, authenticated)
 - ✅ **Identity Provider System** — LDAP/AD and OAuth2/OIDC (Google, Microsoft) SSO
 - ✅ **Group-to-role mappings** with auto-provisioning for external users
 - ✅ **Multi-tenancy** with resource isolation and quotas
@@ -137,7 +138,8 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 #### 🌐 Enterprise Features
 - ✅ **Multi-node cluster infrastructure** with automatic inter-node TLS encryption
-- ✅ **Bucket replication system** with S3 protocol support
+- ✅ **Bucket replication system** with S3 protocol support (AWS S3, MinIO, other MaxIOFS nodes)
+- ✅ **S3 Select** (`SelectObjectContent`), **RestoreObject**, **OwnershipControls**, **BucketInventory** & **BucketLogging** APIs
 - ✅ **Object integrity verification** — background scrubber with corruption alerting
 - ✅ **SMTP email alert system** — disk, quota, and corruption notifications
 - ✅ **Maintenance mode enforcement** — write-blocking with admin lockout prevention
@@ -148,7 +150,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 #### 🔬 Quality Assurance
 - ✅ **CI/CD nightly build pipeline** for continuous integration
-- ✅ **Extensive test coverage** (Backend: 53% | Frontend: 100%)
+- ✅ **Large automated test suite** — 3,800+ Go tests, 95+ frontend tests (see [main README](https://github.com/MaxIOFS/MaxIOFS#testing))
 
 ---
 
@@ -160,7 +162,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 | Technology | Purpose |
 |-----------|---------|
-| **Go 1.25+** | Core storage engine |
+| **Go 1.26+** | Core storage engine |
 | **React + Vite** | Embedded web console |
 | **Pebble** | Metadata storage (CockroachDB LSM-tree engine) |
 | **SQLite** | Authentication database |
@@ -200,21 +202,22 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 </tr>
 </table>
 
-### ⚡ Performance Benchmarks
+### ⚡ Performance & benchmarks
 
-| Metric | Performance | Test Details |
-|--------|-------------|--------------|
-| **Write Speed** | ~374 MB/s | Local filesystem |
-| **Read Speed** | ~1703 MB/s | Sequential reads |
-| **Stress Test** | 7000+ objects | MinIO Warp testing |
-| **Backend Coverage** | 53% | Unit + Integration tests |
-| **Frontend Coverage** | 100% | Complete test suite |
+| Metric | Result | Notes |
+|--------|--------|-------|
+| **PUT p95** | &lt; 10 ms | MinIO Warp, single node, 50 clients |
+| **GET p95** | &lt; 13 ms | 100 clients |
+| **Success rate** | &gt; 99.99% | Mixed load |
+| **Tests** | 3,800+ backend · 95+ frontend | `go test ./...` · `npm run test` |
+
+See [PERFORMANCE.md](https://github.com/MaxIOFS/MaxIOFS/blob/main/docs/PERFORMANCE.md) for full methodology.
 
 ---
 
 ## 📌 Development Roadmap
 
-### ✅ Completed (v0.1.0 - v1.0.0-beta)
+### ✅ Completed (v0.1.0 – v1.2.0)
 
 #### Phase 1: Core Foundation
 - [x] S3 API compatibility layer
@@ -225,7 +228,7 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 
 #### Phase 2: Security & Monitoring
 - [x] Two-factor authentication (2FA)
-- [x] Server-side encryption (SSE-C/SSE-KMS)
+- [x] Server-side encryption (SSE-S3 / AES-256-GCM at rest)
 - [x] Audit logging system
 - [x] Prometheus monitoring integration
 - [x] Real-time notifications (SSE)
@@ -301,17 +304,27 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 - [x] Audit log for automatic account locks and object operations
 - [x] Background stats reconciler (15-min cycle, auto-corrects bucket counters)
 
+#### Phase 10: v1.0.0 stable — UI & S3 parity
+- [x] Complete UI redesign, folder upload, POST presigned URLs, lifecycle execution
+- [x] Full Veeam B&R compatibility, Object Lock per-version enforcement
+- [x] 169-file internal security audit (28 issues fixed in v1.0.0-rc1)
+
+#### Phase 11: v1.1.0 — Console & policies
+- [x] AWS S3-style Actions toolbar, object detail view, rename & tags, folder ZIP download
+- [x] Bucket policy Condition enforcement, PublicAccessBlock, global encryption defaults
+
+#### Phase 12: v1.2.0 — Pebble v2, Select, ops APIs
+- [x] Pebble v2 migration, configurable metadata cache, Veeam-oriented tuning
+- [x] S3 Select, RestoreObject, OwnershipControls, webhook delivery, access logging, inventory API
+- [x] Version browser UI, Docker multi-arch, critical shutdown/metadata fixes
+
 ### 🚧 Planned
 
-#### Phase 10: Advanced Federation & Backends
-- [ ] Multi-region federation
-- [ ] Enhanced IAM policies with RBAC
-- [ ] Advanced compliance features
-- [ ] Geo-replication support
-
-#### Phase 11: Performance & Scalability
-- [ ] Multi-backend support (S3, GCS, Azure)
-- [ ] Erasure coding for data durability
+#### Longer-term
+- [ ] Multi-region federation and geo-replication (beyond current replication)
+- [ ] Enhanced IAM-style policies with richer RBAC
+- [ ] Multi-backend support (S3, GCS, Azure) as secondary tiers
+- [ ] Erasure coding for petabyte-scale durability (not a current focus)
 
 ---
 
@@ -391,8 +404,8 @@ restic backup /important/data
 ## 🚀 Quick Start
 
 **Build Requirements:**
-- Go 1.25+
-- Node.js 24.10+
+- Go 1.26+
+- Node.js 24+
 
 **Build & Run:**
 ```bash
@@ -411,19 +424,45 @@ make build
 ## 📦 Latest Releases
 
 <details open>
-<summary><b>Version 1.0.0-beta</b> (2026-03-02) - Latest Release 🎉</summary>
+<summary><b>Version 1.2.0</b> (2026-04-02) — Latest stable</summary>
 
 ### Highlights
-- 🗄️ **Pebble Engine**: Replaced BadgerDB with CockroachDB's Pebble. Crash-safe WAL, transparent auto-migration, fixes recurring metadata corruption on power loss.
-- 🛡️ **Object Integrity Verification**: Background scrubber scans all objects every 24h with on-demand endpoint. Corruption triggers SSE + email + audit log automatically.
-- 🔧 **Maintenance Mode Enforcement**: Blocks all write operations (S3 + Console API) while preserving read access. Admin-safe exemptions prevent lockout.
-- 📧 **SMTP Email Alerts**: Full email infrastructure — disk space, tenant quota, and corruption alerts. Condition-based notifications auto-resolve in the UI when cleared.
-- 🌐 **Virtual-Hosted-Style S3**: `bucket.s3.example.com` addressing now works. Confirmed Veeam, WinSCP, CyberDuck, and CloudBerry compatibility.
-- ⚡ **Frontend Code Splitting**: Main bundle reduced from 1,003 kB → 550 kB (−45%) via `React.lazy`. Charts (recharts, 383 kB) only load on the Metrics page.
-- 🌍 **i18n Expansion**: All cluster, metrics, bucket, and settings pages fully translated in en/es/pt/de/fr with per-page JSON files.
-- 🔧 **Multipart Upload**: 5 cascading bugs fixed (error mismatch, Windows rename race, 3× I/O waste, Flusher propagation, context cancellation).
+- 🗄️ **Pebble v2** — automatic v1→v2 migration; `metadata_cache_size_mb`; write-heavy tuning for Veeam-style loads.
+- 📊 **S3 Select** — `SelectObjectContent` with SQL on CSV / JSON Lines; **RestoreObject**, **OwnershipControls**, full **BucketInventory** API.
+- 📣 **Webhooks & logging** — notification configs dispatch real POSTs; S3 access logging end-to-end; inventory ETag and shutdown fixes.
+- 🐳 **Docker** — multi-arch images on Docker Hub; Compose bind-mount for host-visible data and config.
+- 🖥️ **Version browser** — Show Versions in UI with restore and delete-marker flows.
+- 🛡️ **Critical fix** — `metadataStore.Close()` on shutdown so Pebble writes are not lost; Object Lock / COMPLIANCE guards, session UX fixes, 30+ more changes.
 
-[View Full Changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#100-beta---2026-03-02)
+[Changelog — v1.2.0](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#120---2026-04-02)
+</details>
+
+<details>
+<summary><b>Version 1.1.0</b> (2026-03)</summary>
+
+### Highlights
+- Actions toolbar, object detail view, rename &amp; tags, folder ZIP download, SigV2 fix, bucket policy Conditions, PublicAccessBlock, encryption defaults, data races fixed.
+
+[Release history](https://github.com/MaxIOFS/MaxIOFS#release-history)
+</details>
+
+<details>
+<summary><b>Version 1.0.0</b> (stable)</summary>
+
+### Highlights
+- UI redesign, POST presigned URLs, notifications, lifecycle, Veeam B&amp;R–grade Object Lock, security fixes.
+
+[Release history](https://github.com/MaxIOFS/MaxIOFS#release-history)
+</details>
+
+<details>
+<summary><b>Version 1.0.0-beta</b> (2026-03-02)</summary>
+
+### Highlights
+- 🗄️ **Pebble (v1)**: Replaced BadgerDB with CockroachDB's Pebble. Crash-safe WAL, transparent auto-migration.
+- 🛡️ **Object integrity scrubber**, maintenance mode, SMTP alerts, virtual-hosted S3, frontend code splitting, i18n expansion.
+
+[Changelog — 1.0.0-beta](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#100-beta---2026-03-02)
 </details>
 
 <details>
@@ -518,22 +557,20 @@ make build
 
 ---
 
-## ⚠️ Known Limitations (Beta)
+## ⚠️ Known Limitations
 
-**Architecture:**
-- ✅ ~~Single-node only~~ → **Multi-node cluster support available!**
-- ✅ ~~Inter-node communication unencrypted~~ → **Automatic TLS since v0.9.1!**
-- Filesystem backend only (multi-backend support planned)
-- Geo-replication not yet implemented
+**Architecture & scale (from [main README](https://github.com/MaxIOFS/MaxIOFS#known-limitations)):**
+- No **erasure coding** — single-node redundancy is filesystem/RAID; clusters replicate full objects.
+- No **cloud tiering** — lifecycle expires objects but does not tier to cold storage.
+- **S3 Select** — GZIP/BZIP2 compressed objects are not supported as Select input.
+- No **per-tenant encryption keys** — single master key; no HSM integration.
+- **Cluster** tested up to **5 nodes**.
+- No **SAML** — use OAuth2/OIDC.
+- No **SOC 2 / ISO 27001 certification** — comprehensive **internal** security audit completed (see v1.0.0-rc1 notes in the repo).
 
-**Security:**
-- No third-party security audit performed
-- HTTPS recommended for production (console and S3 endpoints)
-
-**Production Readiness:**
-- Suitable for development, testing, staging, and **small production workloads**
-- Multi-tenancy and cluster features need extensive production validation
-- Object Lock not validated with third-party tools
+**Operations:**
+- HTTPS recommended in production for console and S3 endpoints.
+- Multi-tenancy and clustering: validate against your own workloads before large rollouts.
 
 ---
 
@@ -541,7 +578,7 @@ make build
 
 <div align="center">
 
-### 🎉 From v0.1.0 to v1.0.0-beta
+### 🎉 From v0.1.0 to v1.2.0
 
 ```mermaid
 graph LR
@@ -554,9 +591,12 @@ graph LR
     G --> H[v0.8.0<br/>Security & Search]
     H --> I[v0.9.0<br/>SSO & IDPs]
     I --> J[v0.9.1<br/>Cluster TLS]
-    J --> K[v1.0.0<br/>Pebble & Integrity]
+    J --> K[v1.0.0-beta<br/>Pebble v1 + Integrity]
+    K --> L[v1.0.0<br/>Stable GA]
+    L --> M[v1.1.0<br/>Console + Policies]
+    M --> N[v1.2.0<br/>Pebble v2 + Select]
 
-    style K fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style N fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
 ```
 
 ### 📈 Development Timeline
@@ -567,8 +607,9 @@ graph LR
 | **Dec 2025** | v0.5.0 - v0.6.1 | Replication, Clustering, Dashboard, Testing |
 | **Jan 2026** | v0.6.2 - v0.7.0 | S3 Auth Fixes, Inventory System, Benchmarking, RPM Packages |
 | **Feb 2026** | v0.8.0 - v0.9.1 | Security Hardening, SSO/IDPs, Cluster TLS, External Logging |
-| **Mar 2026** | v1.0.0-beta | Pebble Engine, Object Integrity, Email Alerts, Maintenance Mode |
-| **Total** | **20+ versions** | **100+ features implemented** |
+| **Mar 2026** | v1.0.0-beta → v1.1.0 | Pebble v1, integrity, stable UI milestones |
+| **Apr 2026** | **v1.2.0** | Pebble v2, S3 Select, RestoreObject, logging, inventory API, version UI |
+| **Total** | **25+ releases** | **See [release history](https://github.com/MaxIOFS/MaxIOFS#release-history)** |
 
 </div>
 
