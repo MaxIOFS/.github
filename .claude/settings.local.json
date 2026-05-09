@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/CHANGELOG.md\")",
+      "Read(//tmp/**)",
+      "Bash(curl -s https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/CHANGELOG.md)",
+      "PowerShell($content = \\(Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/CHANGELOG.md\" -UseBasicParsing\\).Content; $lines = $content -split \"`n\"; $lines[0..299] -join \"`n\")",
+      "Bash(curl -s https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/CHANGELOG.md -o C:\\\\Users\\\\aricardo\\\\Projects\\\\.github\\\\CHANGELOG_temp.md)",
+      "Bash(curl -s https://raw.githubusercontent.com/MaxIOFS/MaxIOFS/refs/heads/main/CHANGELOG.md -o /c/Users/aricardo/Projects/.github/CHANGELOG_temp.md)"
     ]
   }
 }

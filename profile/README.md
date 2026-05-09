@@ -15,8 +15,8 @@
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/github/issues/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
-  <a href="https://github.com/MaxIOFS/MaxIOFS/releases/tag/v1.2.0">
-    <img src="https://img.shields.io/badge/version-1.2.0--stable-blue?style=for-the-badge" />
+  <a href="https://github.com/MaxIOFS/MaxIOFS/releases/tag/v1.4.0">
+    <img src="https://img.shields.io/badge/version-1.4.0--stable-blue?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/badge/tests-3800%2B_backend_|_95%2B_frontend-green?style=for-the-badge" />
@@ -25,48 +25,67 @@
 
 ---
 
-## 🎯 What's New in v1.2.0 (stable)
+## 🎯 What's New in v1.4.0 (stable)
 
 <table>
 <tr>
 <td width="50%">
 
-### 🗄️ Pebble v2 + tunable cache
-Metadata engine upgraded to Pebble v2 with automatic v1→v2 migration on first start. New `storage.metadata_cache_size_mb` for block-cache sizing (important for large buckets / Veeam B&R). Engine pre-tuned for write-heavy backup workloads.
+### 🔑 Role capabilities system
+Service-level permission matrix stored in the database. 11 fine-grained capabilities (`bucket:create`, `object:upload`, `console:access`, etc.) with role defaults and per-user overrides. Enforced across all S3 and console API handlers. Admin UI for managing permissions per-user and per-role.
 
 </td>
 <td width="50%">
 
-### 📊 S3 Select & inventory API
-`SelectObjectContent` runs SQL (SELECT, WHERE, GROUP BY, aggregates) on CSV and JSON Lines via streaming Event Stream protocol. Full `BucketInventory` configuration API; scheduled reports already executed by the inventory engine.
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🔧 RestoreObject & OwnershipControls
-`POST ?restore` for Glacier-style workflows (Veeam, NetBackup, AWS CLI). `OwnershipControls` so AWS SDK v2 clients stop throwing `OwnershipControlsNotFoundError`. `GetObjectTorrent` returns clean `501`.
-
-</td>
-<td width="50%">
-
-### 📣 Notifications, logging & Docker
-Bucket notification configs now dispatch real webhooks after mutating operations (with SSRF protection). Server access logging wired end-to-end (`?logging`). Multi-arch images on Docker Hub; Compose defaults to a host bind mount for easy `config.yaml` edits.
+### 🛡️ 50+ bug fixes — versioning, metadata & S3 parity
+Critical fixes: version IDs preserved in HA replication, `versionId` honored in tagging/ACL/lock/restore operations, `ListObjectsV2 KeyCount` includes common prefixes, multipart upload stores no request headers as metadata (security fix), filesystem writes are now atomic at metadata and data level.
 
 </td>
 </tr>
 <tr>
 <td width="50%">
 
-### 🖥️ Version browser UI
-**Show Versions** toggle in the bucket browser: flat view of every version and delete marker, one-click restore, delete-marker removal, and permanent version delete — backed by new console API endpoints.
+### 🔒 Security hardening
+Presigned V4 URLs now enforce signed headers and expiration limits. `CopyObject` goes through full source-read + destination-write authorization. Filesystem path traversal fix for Windows separators. `console:access` revocation takes effect immediately on existing tokens.
 
 </td>
 <td width="50%">
 
-### 🛡️ Reliability & security fixes
-**Critical:** `metadataStore.Close()` added to shutdown — without it, Pebble `NoSync` writes since last compaction could be lost on exit. Plus COMPLIANCE bucket delete protection, Object Lock UI enforcement, sliding session refresh, and 30+ additional fixes (see [changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#120---2026-04-02)).
+### 🐛 Additional reliability fixes
+Replication queue deduplication (no more duplicate remote PUTs). Inventory report uploads are now atomic (storage before metadata). Multipart listing pagination truncation and markers corrected. Session refresh no longer treats background token calls as user activity (see [changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#140---2026-05-03)).
+
+</td>
+</tr>
+</table>
+
+## 🎯 What's New in v1.3.0
+
+<table>
+<tr>
+<td width="50%">
+
+### 🌐 HA write quorum & read fallback
+Writes now block until `ceil(factor/2)` replicas acknowledge. Failed quorum returns HTTP 503 with `Retry-After`. Read requests retry across all healthy replicas sorted by latency, with automatic node flipping to `Unavailable` on failures.
+
+</td>
+<td width="50%">
+
+### 🔄 Anti-entropy scrubber
+Background reconciliation across all HA replicas (configurable cycle, default 24 h). Last-Writer-Wins per object with crash-safe checkpoint in Pebble. Throttled comparisons, per-run history in SQLite, status exposed via admin API.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 💀 Dead-node redistribution & storage pressure
+Nodes permanently offline beyond threshold are flipped to `dead` state with last-survivor protection. New `storage_pressure` health state excludes high-disk nodes from writes while keeping them for reads. All thresholds are live-reloadable config keys.
+
+</td>
+<td width="50%">
+
+### 🔧 Cluster infrastructure overhaul
+Dedicated inter-node port 8082. Realtime replication mode now functional. Stale-node reconciler for safe catch-up after partitions. Inter-node S3 proxy with HMAC auth and replay-attack protection. Critical fixes: sync tables never created, TLS cert SAN mismatch, cluster join broken in production (see [changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#130---2026-04-21)).
 
 </td>
 </tr>
@@ -78,7 +97,7 @@ Bucket notification configs now dispatch real webhooks after mutating operations
 
 MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an embedded React + Vite web interface, designed as a single deployable binary.
 
-**Current Status:** 🟢 **Stable (v1.2.0)** — suitable for production up to mid-range scale (single node to 5-node cluster); see [known limitations](https://github.com/MaxIOFS/MaxIOFS#known-limitations) in the main repository.
+**Current Status:** 🟢 **Stable (v1.4.0)** — suitable for production up to mid-range scale (single node to 5-node cluster); see [known limitations](https://github.com/MaxIOFS/MaxIOFS#known-limitations) in the main repository.
 
 ### 💡 Why MaxIOFS?
 
@@ -133,12 +152,19 @@ MaxIOFS is a **Go-based object storage system** with S3 API compatibility and an
 - ✅ **Server-side encryption (SSE-S3)** — AES-256-GCM at rest (64 KB chunks, authenticated)
 - ✅ **Identity Provider System** — LDAP/AD and OAuth2/OIDC (Google, Microsoft) SSO
 - ✅ **Group-to-role mappings** with auto-provisioning for external users
+- ✅ **Role capabilities system** — 11 service-level permissions with role defaults and per-user overrides, enforced across S3 and console APIs
 - ✅ **Multi-tenancy** with resource isolation and quotas
 - ✅ **Complete audit logging** for compliance tracking
 
 #### 🌐 Enterprise Features
-- ✅ **Multi-node cluster infrastructure** with automatic inter-node TLS encryption
-- ✅ **Bucket replication system** with S3 protocol support (AWS S3, MinIO, other MaxIOFS nodes)
+- ✅ **Multi-node cluster infrastructure** with automatic inter-node TLS encryption (dedicated inter-node port 8082)
+- ✅ **HA write quorum** — writes acknowledged by `ceil(factor/2)` replicas; HTTP 503 on quorum failure with automatic local rollback
+- ✅ **HA read fallback** — ordered retry across all healthy replicas sorted by latency
+- ✅ **Anti-entropy scrubber** — continuous background reconciliation across HA replicas with Last-Writer-Wins and crash-safe checkpoint
+- ✅ **Dead-node redistribution** — automatic removal of permanently offline nodes from write paths, with last-survivor protection
+- ✅ **Storage-pressure health state** — high-disk nodes excluded from writes, still serve reads
+- ✅ **Stale-node reconciler** — safe LWW catch-up when a partitioned node rejoins
+- ✅ **Bucket replication system** with S3 protocol support (AWS S3, MinIO, other MaxIOFS nodes) — realtime mode now functional
 - ✅ **S3 Select** (`SelectObjectContent`), **RestoreObject**, **OwnershipControls**, **BucketInventory** & **BucketLogging** APIs
 - ✅ **Object integrity verification** — background scrubber with corruption alerting
 - ✅ **SMTP email alert system** — disk, quota, and corruption notifications
@@ -318,6 +344,27 @@ See [PERFORMANCE.md](https://github.com/MaxIOFS/MaxIOFS/blob/main/docs/PERFORMAN
 - [x] S3 Select, RestoreObject, OwnershipControls, webhook delivery, access logging, inventory API
 - [x] Version browser UI, Docker multi-arch, critical shutdown/metadata fixes
 
+#### Phase 13: v1.3.0 — HA cluster overhaul
+- [x] HA write quorum with synchronous replica acknowledgement and automatic local rollback on failure
+- [x] HA read fallback with latency-sorted ordered retry across all healthy replicas
+- [x] Anti-entropy scrubber with Last-Writer-Wins reconciliation and crash-safe checkpoint
+- [x] Dead-node redistribution with last-survivor protection and admin drain shortcut
+- [x] Storage-pressure health state with hysteresis, excluding high-disk nodes from writes
+- [x] Stale-node reconciler for safe catch-up after partition or offline period
+- [x] Dedicated cluster inter-node port 8082; realtime replication mode fully functional
+- [x] Inter-node S3 proxy with HMAC authentication and replay-attack protection
+- [x] Critical cluster fixes: sync tables never created, TLS SAN mismatch, cluster join broken in production
+
+#### Phase 14: v1.4.0 — Role capabilities & S3 correctness
+- [x] Role capabilities system: 11 service-level permissions, role defaults, per-user overrides, cluster sync
+- [x] Capability enforcement across all S3 handlers, console API routes, and immediate token revocation
+- [x] Admin UI: Manage Permissions modal per user and Role Capabilities matrix page
+- [x] 50+ S3 correctness fixes: `versionId` honored in tagging, ACL, Object Lock, RestoreObject
+- [x] HA replication preserves version IDs; multipart completion generates versioned paths in versioned buckets
+- [x] Atomic filesystem writes for object data and metadata; correct metadata-before-file deletion order
+- [x] Presigned V4 signed-headers enforcement and expiration limit validation
+- [x] `CopyObject` authorization through source-read + destination-write permission path
+
 ### 🚧 Planned
 
 #### Longer-term
@@ -424,7 +471,34 @@ make build
 ## 📦 Latest Releases
 
 <details open>
-<summary><b>Version 1.2.0</b> (2026-04-02) — Latest stable</summary>
+<summary><b>Version 1.4.0</b> (2026-05-03) — Latest stable</summary>
+
+### Highlights
+- 🔑 **Role capabilities system** — 11 service-level permissions with role defaults and per-user admin overrides; enforced across all S3 and console handlers; cluster-synced; full admin UI.
+- 🛡️ **50+ S3 correctness fixes** — `versionId` honored in tagging, ACL, Object Lock retention, RestoreObject; HA replication preserves version IDs; versioned multipart completion; atomic filesystem writes.
+- 🔒 **Security hardening** — presigned V4 signed-headers enforcement, `CopyObject` full authorization path, `console:access` revocation effective on existing tokens, filesystem path traversal fix.
+- 🐛 **Reliability** — replication queue deduplication, atomic inventory report uploads, multipart pagination correctness, session refresh no longer counts background token calls as user activity.
+
+[Changelog — v1.4.0](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#140---2026-05-03)
+</details>
+
+<details>
+<summary><b>Version 1.3.0</b> (2026-04-21)</summary>
+
+### Highlights
+- 🌐 **HA write quorum** — synchronous `ceil(factor/2)` replica acknowledgement; HTTP 503 on quorum failure; automatic local rollback on PUT/CompleteMultipart failure.
+- 📖 **HA read fallback** — latency-sorted ordered retry across all healthy replicas; automatic node flipping to Unavailable on repeated failures.
+- 🔄 **Anti-entropy scrubber** — LWW background reconciliation with configurable cycle, crash-safe Pebble checkpoint, and throttled comparison rate.
+- 💀 **Dead-node redistribution** — threshold-based terminal `dead` state, last-survivor protection, admin drain shortcut, SSE events.
+- 💾 **Storage-pressure health state** — hysteresis-based exclusion from writes; configurable thresholds; live-reloadable.
+- 🔧 **Stale-node reconciler** — LWW catch-up for offline/partitioned nodes on rejoin; HA object delta sync.
+- 🛠️ **Critical cluster fixes** — sync tables never created (all inter-node sync was permanently disabled), TLS SAN mismatch, cluster join broken in production, 30-second new-node delay.
+
+[Changelog — v1.3.0](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#130---2026-04-21)
+</details>
+
+<details>
+<summary><b>Version 1.2.0</b> (2026-04-02)</summary>
 
 ### Highlights
 - 🗄️ **Pebble v2** — automatic v1→v2 migration; `metadata_cache_size_mb`; write-heavy tuning for Veeam-style loads.
@@ -578,7 +652,7 @@ make build
 
 <div align="center">
 
-### 🎉 From v0.1.0 to v1.2.0
+### 🎉 From v0.1.0 to v1.4.0
 
 ```mermaid
 graph LR
@@ -595,8 +669,10 @@ graph LR
     K --> L[v1.0.0<br/>Stable GA]
     L --> M[v1.1.0<br/>Console + Policies]
     M --> N[v1.2.0<br/>Pebble v2 + Select]
+    N --> O[v1.3.0<br/>HA Quorum + Anti-Entropy]
+    O --> P[v1.4.0<br/>Role Capabilities]
 
-    style N fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style P fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
 ```
 
 ### 📈 Development Timeline
@@ -608,8 +684,9 @@ graph LR
 | **Jan 2026** | v0.6.2 - v0.7.0 | S3 Auth Fixes, Inventory System, Benchmarking, RPM Packages |
 | **Feb 2026** | v0.8.0 - v0.9.1 | Security Hardening, SSO/IDPs, Cluster TLS, External Logging |
 | **Mar 2026** | v1.0.0-beta → v1.1.0 | Pebble v1, integrity, stable UI milestones |
-| **Apr 2026** | **v1.2.0** | Pebble v2, S3 Select, RestoreObject, logging, inventory API, version UI |
-| **Total** | **25+ releases** | **See [release history](https://github.com/MaxIOFS/MaxIOFS#release-history)** |
+| **Apr 2026** | v1.2.0 → v1.3.0 | Pebble v2, S3 Select, HA quorum, anti-entropy, dead-node redistribution, cluster overhaul |
+| **May 2026** | **v1.4.0** | Role capabilities system, 50+ S3 correctness & security fixes |
+| **Total** | **27+ releases** | **See [release history](https://github.com/MaxIOFS/MaxIOFS#release-history)** |
 
 </div>
 
