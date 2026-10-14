@@ -12,8 +12,8 @@
   <a href="https://github.com/MaxIOFS/MaxIOFS">
     <img src="https://img.shields.io/github/stars/MaxIOFS/MaxIOFS?style=for-the-badge" />
   </a>
-  <a href="https://github.com/MaxIOFS/MaxIOFS/releases/tag/v1.4.2">
-    <img src="https://img.shields.io/badge/version-1.4.2--stable-blue?style=for-the-badge" />
+  <a href="https://github.com/MaxIOFS/MaxIOFS/releases/tag/v1.8.0">
+    <img src="https://img.shields.io/badge/version-1.8.0--stable-blue?style=for-the-badge" />
   </a>
   <a href="https://github.com/MaxIOFS/MaxIOFS/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" />
@@ -38,23 +38,23 @@ MaxIOFS is a Go-based object storage server with an S3-compatible API and an emb
 
 It fits single-node deployments and small to mid-range clusters where the priority is a practical, batteries-included storage system: users, tenants, access keys, policies, auditing, monitoring, encryption, replication, and a usable admin console in one deployable binary.
 
-**Current status:** stable `v1.4.2`, suitable for production evaluation and mid-range deployments. See the main repository for current limitations and release notes.
+**Current status:** stable `v1.8.0`, suitable for production evaluation and mid-range deployments. See the main repository for current limitations and release notes.
 
 ---
 
-## What's New In v1.4.2
+## What's New In v1.8.0
 
-`v1.4.2` focuses on security hardening, tenant isolation, concurrency correctness, and dependency refreshes.
+`v1.8.0` brings the current HA and storage fixes for production clusters, with stronger handling of node drain, replication-factor behavior, quota accounting, multipart completion, and observability.
 
 | Area | Highlights |
 | --- | --- |
-| Security | Constant-time S3 secret comparison, encrypted S3 access secrets at rest, stronger PBKDF2 key derivation, safer console request body limits, HSTS on the console, CSP hardening, and stricter object path validation. |
-| Multi-tenancy | Bucket permissions are scoped by bucket tenant, tenant admins no longer receive cross-tenant SSE notifications, and global admins can manage ACL/legal-hold operations on tenant buckets correctly. |
-| Correctness | Atomic tenant quota updates, fixed versioning metrics races, exact-version HA fanout replication, safer version deletion under concurrent writes, and fixed metadata updates for versioned buckets. |
-| Operations | Proxy streaming no longer buffers large request bodies in RAM, rate limiter races and cleanup leaks were fixed, sidebar navigation works correctly when collapsed, and inventory can be disabled from the console. |
-| Dependencies | Go and frontend dependencies were refreshed within existing major versions; build, verification, core Go tests, frontend production build, and Vitest suite passed for the release. |
+| Cluster & HA | Safer node drain behavior, improved replica catch-up and stale-node reconciliation, more reliable replication-factor handling, and better read/write consistency across cluster nodes. |
+| Storage & quotas | Better bucket and tenant quota accounting under concurrent writes, safer Object Lock validation, and more consistent handling of versioned deletes and overwritten objects. |
+| Performance | Multipart completion now streams parts more efficiently, reduces extra reads/writes, and keeps object writes and metadata updates more stable under load. |
+| Security & ops | Improved encryption secret handling, stricter validation paths, and a cleaner Prometheus/Grafana metrics surface for S3 and cluster health views. |
+| Release quality | Updated dependencies and the 1.8.0 verification pass across build, core Go tests, frontend build, and Vitest coverage. |
 
-[Read the full v1.4.2 changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md#142---2026-06-30)
+[Read the full v1.8.0 changelog](https://github.com/MaxIOFS/MaxIOFS/blob/main/CHANGELOG.md)
 
 ---
 
